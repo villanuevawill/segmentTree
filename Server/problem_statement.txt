@@ -1,0 +1,136 @@
+/* Hiring challenge problem: Simplified click detection
+ * ====================================================
+ *
+ * **The problem**: approximate click detection on a line
+ *   instead of a plane.  Given a set of intervals along the
+ *   number line, each with an
+ *   additional z-index, and given a point on the number line,
+ *   find the interval with the highest z-index.**
+ *
+ * At the bottom of this page, there is boilerplate code
+ *   and a few questions for you to answer in the time given.
+ *   You may use the internet to help, and you can be
+ *   wildly creative in your answer, but picking up
+ *   large libraries out of whole cloth is not recommended;
+ *   you are expected to write code.
+ *
+ * == Why: Clicking on a rectangular area ==
+ *
+ * A browser window may have many rectangular surfaces on it, which a
+ *   user can click to interact with.
+ *
+ * Determining which surface a user clicked on is a tricky problem with
+ *   many different solutions.
+ *
+ * If there were a red rectangular surface with corners (10, 10) and (30, 40),
+ *   a click at point (21, 40) could correspond to that surface, but a click
+ *   at (50, 60) would not.
+ *
+ * However, rectangles can overlap each other as well.
+ * If there were a blue rectangle with corners (20, 20) and (50, 50), then
+ *   that click at (21, 40) would fall into the red or the blue rectangle.
+ *
+ * Because of this, each rectangle comes with a a "z-index" which tells
+ *   the browser which one to paint over the other in case of overlap.
+ *   The higher z-index wins.
+ *
+ * It is still tough to quickly determine which element a user has clicked when
+ *   her mouse goes down at (x, y).
+ *
+ * This problem can get tricky, so let's start with a simpler case: intervals.
+ *
+ * == Intervals ==
+ *
+ * An interval, rather than having two corners in two dimensions, simply has two endpoints
+ *   along the number line.  If we have many intervals along the number line,
+ *   a user clicking at point (x) might still fall into many of them, so we
+ *   assign them a z-index as well.
+ *
+ * So below, clicking at point 6 would yield you the B interval.
+ *   Clicking on point 15 would be A.
+ *   Clicking on point 10 or point 21 would be A, since it overshadows B
+ *     and C.
+ *   Clicking on point 25 would be C.
+ *   Click on points 0, 1, or say, 28 would yield no corresponding interval.
+ *
+ * z:2          |-----------|(A)
+ * z:1   (B) |----|     |--------| (C)
+ *     |====|====|====|====|====|====|
+ *     0    5   10   15   20   25   30
+ *
+ * == Your Challenge ==
+ *
+ * You are given a text file, input.txt, comma-delimited, representing one
+ *   interval per row.
+ *
+ *   The format of each row is: <id>, <x position>, <length>, <z index>\n
+ *
+ *   So a row of 2,0,10,1 would mean "interval number 2 starts at 0,
+ *     goes 10 units to the right (up until point 9 but not 10), and
+ *     has a z index of 1".  You can assume all of these are zero or
+ *     a positive integer.  Intervals with zero length will represent
+ *     zero pixels (can't be clicked) in this problem.
+ *
+ *   Your job is to implement IntervalStore,
+ *     and specifically, the load (load a large number of intervals)
+ *     add (add one interval), and find (choose one point and "find"
+ *     the interval "clicked"), in a reasonable way designed
+ *     for high performance with a large number of elements.
+ *
+ *   Feel free to submit a solution with many files, or even not in
+ *     JavaScript.  The main criteria will be correctness, performance,
+ *     elegance, and creativity.
+ *
+ *   Correct output is supplied in output.txt.  Note that yours
+ *     may differ if there are "ties" in the z-index broken
+ *     differently, and it may still be correct.
+**/
+
+/* ======= Additional questions =======
+ * 1. In which scenarios does your implementation perform best?
+ *   (e.g. high/low number of surfaces, points, fast loading or fast clicking, etc.)
+My implementation will work best when there are a high number of surfaces.  It has a long load time, but optimizes for speed of lookup on clicks (it is actually constant time access for lookup). My system does not even work for surfaces.  If you are trying to look up a particular interval, then the ideal data structure would be a segment tree.  I produced an object that built the bottom of the tree, but it does not have all the pieces.
+ * 2. Could your solution be extended to deal with two-dimensional intervals
+ *   (rectangles) on a plane?  This would be solving the problem for
+ *   web pages, for example.
+Yes, it could be carried into this situation.  Instead of it being listed for each individual x number, it would need to be listed for x,y pairs if you still wanted constant time access.  Otherwise, you could try and list all the nodes at a particular x value, and then all the nodes at a particular y value.  You could then iterate over those nodes and find which one has the highest z-index. 
+ * 3. Could you describe some other solutions to this problem?
+The best solution would probably be to work out a segment tree.  The segment tree would allow for easy lookup on intervals in addition to clicks.  This could be useful if a user is working on a touch screen, and the finger may cover an interval.  You could then set it up to have an equation that determines the max interval covered, and the z-indexes involved.
+ *   Where do they work best?  Do they extend to two dimensions as well?
+Yes, a segment tree would also extend to two dimensions. You could have an x and y (left/right) nodes as the root nodes.
+ */
+
+// =================== CODE area ==============================
+
+
+// should find a way to load input.txt and call load()
+function IntervalStore() {
+}
+
+//
+// Adds many intervals to the set.
+// Takes in array of objects with contents:
+// [id, x, length, z]
+IntervalStore.prototype.load = function(data) {
+};
+
+// create and add a new interval object
+IntervalStore.prototype.add = function(id, x, len, z, arr) {
+};
+
+// returns object with keys:
+// {id, x, len, z}
+// or empty object if nothing found
+IntervalStore.prototype.find = function(x) {
+};
+
+
+var myIntervalStore = new IntervalStore();
+myIntervalStore.load(data);
+
+// Test: click every hundred pixels (0, 100, 200, ... 9900)
+// Should match
+for (var i = 0; i < 100; i++) {
+    console.log("Clicking at point " + i + ": " + JSON.stringify(myIntervalStore.find(100 * i)));
+}
+
