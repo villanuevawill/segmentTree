@@ -68,7 +68,7 @@ IntervalStore.prototype.find = function(id) {
   }
   return clickedSegment;
 };
-
+//create new interval
 interval = new IntervalStore();
 interval.load(inputUrl);
 exports.interval = interval;
